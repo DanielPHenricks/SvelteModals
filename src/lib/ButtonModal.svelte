@@ -3,26 +3,57 @@
     let showModal = false;
 
     // What the default button title should be.
-    const buttonTitle = "Open";
+    const buttonTitle = "Preferences";
 
     // The title for the modal.
-    export let modalTitle = "Title";
+    export let modalTitle = "Set Preferences";
 
     // The text in the middle of the modal.
-    export let buttonTopics = ["None"];
+    export let buttonTopics = [];
+
+    // By default, there are no prefs.
+    let hasSavedPrefs = false;
+
+    // The saved preferences.
+    let savedPrefs = [];
+
+    // When the submit button is clicked.
+    const processButtonClick = () => {
+        const form = document.querySelector("#buttonForm");
+        const checked = form.querySelectorAll('input[type="checkbox"]:checked');
+        let labels = [];
+        checked.forEach((box) => {
+            const label = form.querySelector('label[for="' + box.id + '"]');
+            labels.push(label.innerHTML);
+        });
+        const string = JSON.stringify(labels);
+        localStorage.setItem("prefs", string);
+    };
+
+    // Load the saved prefs.
+    const openModal = () => {
+        showModal = true;
+        const str = localStorage.getItem("prefs");
+        if (str != undefined) {
+            const parsed = JSON.parse(str);
+            modalTitle = "Saved Preferences";
+            hasSavedPrefs = true;
+            buttonTopics = parsed;
+        }
+    };
 </script>
 
-<button on:click={() => (showModal = true)}>{buttonTitle}</button>
+<button on:click={() => openModal()}>{buttonTitle}</button>
 
 {#if showModal}
     <div class="modal-overlay">
-        <div class="modal-content">
+        <div class="modal-content dark-mode">
             <h3>{modalTitle}</h3>
-            <form>
-                <div class="form-group">
+            <form id="buttonForm">
+                <div class="text-left">
                     {#each buttonTopics as topic}
                         <input
-                            class="form-check-input"
+                            class="form-check-input mt-2"
                             type="checkbox"
                             value=""
                             id="defaultCheck{topic}"
@@ -33,8 +64,14 @@
                         >
                             {topic}
                         </label>
+                        <br />
                     {/each}
                 </div>
+                <button
+                    type="submit"
+                    class="btn btn-primary m-3"
+                    on:click={() => processButtonClick()}>Submit</button
+                >
             </form>
             <button
                 on:click={() => {
@@ -60,8 +97,21 @@
 
     .modal-content {
         max-width: 30vw;
-        background-color: white;
         padding: 1rem;
         border-radius: 4px;
+        justify-content: center;
+    }
+
+    .dark-mode {
+        background-color: black;
+        color: white;
+    }
+
+    .text-left {
+        text-align: left;
+    }
+
+    label {
+        display: inline-block;
     }
 </style>

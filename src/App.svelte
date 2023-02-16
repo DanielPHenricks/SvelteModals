@@ -7,11 +7,10 @@
         modalText: "These are the future sports games at Vandy: ",
     };
 
-    const topics = ["Hey", "Baseball"];
+    const topics = ["1", "2", "3", "4", "5"];
 </script>
 
 <!-- An example of a default modal. -->
-<Modal />
 
 <!-- An example of a modal with custom content. -->
 <Modal {...exampleContent} />
