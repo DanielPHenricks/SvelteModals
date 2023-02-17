@@ -7,12 +7,17 @@
         modalText: "These are the future sports games at Vandy: ",
     };
 
-    const topics = ["1", "2", "3", "4", "5"];
+    const topics = [
+        "Baseball",
+        "Men's Basketball",
+        "Women's Basketball",
+        "Swimming",
+        "Football",
+    ];
 </script>
-
-<!-- An example of a default modal. -->
 
 <!-- An example of a modal with custom content. -->
 <Modal {...exampleContent} />
 
+<!-- An example of a modal to save user preferences. -->
 <ButtonModal buttonTopics={topics} />

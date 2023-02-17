@@ -12,12 +12,14 @@
     export let buttonTopics = [];
 
     // By default, there are no prefs.
-    let hasSavedPrefs = false;
+    let hasSavedPrefs = localStorage.getItem("prefs") != undefined;
 
     // The saved preferences.
-    let savedPrefs = [];
+    let savedPrefs = hasSavedPrefs
+        ? JSON.parse(localStorage.getItem("prefs"))
+        : [];
 
-    // When the submit button is clicked.
+    // When the submit button is clicked, process the data.
     const processButtonClick = () => {
         const form = document.querySelector("#buttonForm");
         const checked = form.querySelectorAll('input[type="checkbox"]:checked');
@@ -30,20 +32,26 @@
         localStorage.setItem("prefs", string);
     };
 
-    // Load the saved prefs.
-    const openModal = () => {
+    // Load the saved prefs and prepare the modal.
+    const loadModal = () => {
         showModal = true;
-        const str = localStorage.getItem("prefs");
-        if (str != undefined) {
-            const parsed = JSON.parse(str);
-            modalTitle = "Saved Preferences";
-            hasSavedPrefs = true;
-            buttonTopics = parsed;
-        }
+        modalTitle = (hasSavedPrefs ? "Saved" : "Set") + " Preferences";
+    };
+
+    // Are the topics the default ones or have they been updated?
+    const getTopics = () => {
+        return hasSavedPrefs ? savedPrefs : buttonTopics;
+    };
+
+    // Set the prefs variable back to default.
+    const resetPrefs = () => {
+        savedPrefs = [];
+        hasSavedPrefs = false;
+        localStorage.removeItem("prefs");
     };
 </script>
 
-<button on:click={() => openModal()}>{buttonTitle}</button>
+<button on:click={() => loadModal()}>{buttonTitle}</button>
 
 {#if showModal}
     <div class="modal-overlay">
@@ -51,7 +59,7 @@
             <h3>{modalTitle}</h3>
             <form id="buttonForm">
                 <div class="text-left">
-                    {#each buttonTopics as topic}
+                    {#each getTopics() as topic}
                         <input
                             class="form-check-input mt-2"
                             type="checkbox"
@@ -71,6 +79,10 @@
                     type="submit"
                     class="btn btn-primary m-3"
                     on:click={() => processButtonClick()}>Submit</button
+                >
+                <button
+                    class="btn btn-primary m-3"
+                    on:click={() => resetPrefs()}>Reset</button
                 >
             </form>
             <button
