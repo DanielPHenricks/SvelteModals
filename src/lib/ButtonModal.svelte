@@ -1,9 +1,11 @@
 <script>
+    import "bootstrap-icons/font/bootstrap-icons.css";
+
     // Whether the modal should be shown or not.
     let showModal = false;
 
     // What the default button title should be.
-    const buttonTitle = "Preferences";
+    const buttonTitle = "Edit";
 
     // The title for the modal.
     export let modalTitle = "Set Preferences";
@@ -15,7 +17,7 @@
     let hasSavedPrefs = localStorage.getItem("prefs") != undefined;
 
     // The saved preferences.
-    let savedPrefs = hasSavedPrefs
+    export let savedPrefs = hasSavedPrefs
         ? JSON.parse(localStorage.getItem("prefs"))
         : [];
 
@@ -51,7 +53,9 @@
     };
 </script>
 
-<button on:click={() => loadModal()}>{buttonTitle}</button>
+<button on:click={() => loadModal()}
+    ><i class="bi bi-pencil" />{buttonTitle}</button
+>
 
 {#if showModal}
     <div class="modal-overlay">
@@ -125,5 +129,8 @@
 
     label {
         display: inline-block;
+    }
+    i {
+        margin-right: 2px;
     }
 </style>

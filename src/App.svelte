@@ -21,3 +21,7 @@
 
 <!-- An example of a modal to save user preferences. -->
 <ButtonModal buttonTopics={topics} />
+
+<!-- Example usage of the ButtonModal class-->
+<p>Topics I'm interested in:</p>
+{JSON.parse(localStorage.getItem("prefs"))}
